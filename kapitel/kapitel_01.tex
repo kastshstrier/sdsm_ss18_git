@@ -4,24 +4,24 @@ Dieses Kapitel bietet eine Einführung in die Grundbegriffe von Git und deren ge
 
 \subsection{Grundbegriffe}
 \label{sec:einfuehrung.grundbegriffe}
-Um dem Umgang mit Git zu erläutern ist es notwendig, einige Fachbegriffe zu verstehen. 
+Um dem Umgang mit Git zu erläutern ist es notwendig, einige Fachbegriffe zu verstehen.
 
-\myparagraph{Versionskontrollsystem} 
+\myparagraph{Versionskontrollsystem}
 Ein Versionskontrollsystem dient zur Verwaltung und Versionierung von Software. Bekannte Projekte die unter dem Versionskontrollsystem Git stehen sind beispielsweise der Linux-Kernel und Git selbst. Beide Projekte stehen unter der Lizenz GPL. Der Quellcode kann mittels git bezogen werden. Dazu später mehr.
 
-Bei Versionskontrollsystemen wird unterschieden zwischen zentralen und dezentralen Systemen. Git ist ein dezentrales System. Der Entwickler ist nicht abhängig von dem Server auf dem die Versionshierarchie gespeichert ist. Der Entwickler ist in der Lage mit Git die komplette Versionshierarchie auf sein eigenes System zu klonen und auf dieser Basis zu arbeiten.   
+Bei Versionskontrollsystemen wird unterschieden zwischen zentralen und dezentralen Systemen. Git ist ein dezentrales System. Der Entwickler ist nicht abhängig von dem Server auf dem die Versionshierarchie gespeichert ist. Der Entwickler ist in der Lage mit Git die komplette Versionshierarchie auf sein eigenes System zu klonen und auf dieser Basis zu arbeiten.
 
 \myparagraph{Repository}
 Git  verwaltet von jeder Datei unterschiedliche Zustände bzw. Versionen. Diese werden in dem Repository gespeichert. Mithilfe des Repositories ist es möglich, auf jeden Zustand einer Datei zurück zu springen.
 
 \myparagraph{Working Tree}
-Alle Modifikationen an Dateien bzw. dem Quellcode werden im Working Tree vorgenommen. Andere Bezeichnungen hierfür sind auch Working Directory oder Workspace. Wobei bei vielen IDEs im Heimatverzeichnis das Verzeichnis workspace erstellt wird um Projekte zu speichern und unter Versionskontrolle zu setzen. 
+Alle Modifikationen an Dateien bzw. dem Quellcode werden im Working Tree vorgenommen. Andere Bezeichnungen hierfür sind auch Working Directory oder Workspace. Wobei bei vielen IDEs im Heimatverzeichnis das Verzeichnis workspace erstellt wird um Projekte zu speichern und unter Versionskontrolle zu setzen.
 
 \myparagraph{Commit}
-Ein Commit nimmt jede Veränderung, Modifikation oder Erstellung an Dateien im Working Tree auf. Zusätzlich speichert der Commit noch weitere Informationen wie den Benutzernamen und dessen E-Mail mit Datum und optional gpg-Signatur ab.  
+Ein Commit nimmt jede Veränderung, Modifikation oder Erstellung an Dateien im Working Tree auf. Zusätzlich speichert der Commit noch weitere Informationen wie den Benutzernamen und dessen E-Mail mit Datum und optional gpg-Signatur ab.
 
 \myparagraph{HEAD}
-HEAD bildet eine Referenz ab, in welchem Zustand der Entwickler sein Working Tree vor findet. 
+HEAD bildet eine Referenz ab, in welchem Zustand der Entwickler sein Working Tree vor findet.
 
 \myparagraph{Branch}
 Jede Software kann in ihrem Verlauf mehrere Entwicklungsverzweigungen haben um beispielsweise in jeder Verzweigung einzelne Teilaufgaben wie Patches oder neuen Features von Software zu entwickeln. Diese Verzweigungen werden Branches genannt. Jede Verzweigung kann später durch einen Merge oder Rebase wieder zurück geführt werden.
@@ -39,9 +39,9 @@ $ git config --global user.email "hugo.mckinnock@example.com"
 \label{sec:einfuehrung.sign-commits}
 Da jede Person in der Lage ist den Quellcode boshaft zu ändern unter beliebigen Namen, bietet Git die Möglichkeit an jeden Commit mit einem GnuPG Schlüssel zu signieren.
 
-\begin{INFO}
+\begin{info-popup}
   Manche Projekte setzen signierte Commits voraus, wie beispielsweise das Projekt um den Linux Kernel. Nicht signierte Commits werden durch die Hauptverantwortlichen nicht übernommen. Dazu später mehr.
-\end{INFO}
+\end{info-popup}
 
 Ist GnuPG auf dem eigenen System nicht vorhanden, kann dies nachträglich installiert werden. Debian basierende Derivate  bieten GnuPG durch die offiziellen Paketquellen an. Dazu reicht die Installation über den Terminalbefehl \textit{sudo apt-get update; sudo apt-get install gpg2 --yes}.
 
@@ -49,7 +49,7 @@ Wird ein Windows-System genutzt, müssen die GnuPG Binaries manuell heruntergela
 
 Der GnuPG Schlüssel wird anschließend über den Aufruf von gpg im Terminal (Linux Derivate) oder der Git-Bash (Windows) erzeugt. Im Beispiel wird ein RSA 2048 Bit Schlüssel erzeugt.
 
-\begin{minted}[framesep=2mm, fontsize=\small]{bash}
+\begin{verbatim}
 $ gpg --gen-key
 gpg (GnuPG) 2.1.11; Copyright (C) 2016 Free Software Foundation, Inc.
 This is free software: you are free to change and redistribute it.
@@ -66,11 +66,11 @@ Sie haben diese User-ID gewählt:
 
 Ändern: (N)ame, (E)-Mail oder (F)ertig/(A)bbrechen? F
 gpg: Schlüssel F3FFC9EC ist als ultimativ vertrauenswürdig gekennzeichnet
-\end{minted}
+\end{verbatim}
 
-Wurde der GnuPG Schlüssel erzeugt, kann dieser nun hinterlegt werden um Commits im Hintergrund automatisch zu signieren. Dazu muss zuerst die Schlüssel-ID ausfindig gemacht werden und anschließend Git mitgeteilt werden. 
+Wurde der GnuPG Schlüssel erzeugt, kann dieser nun hinterlegt werden um Commits im Hintergrund automatisch zu signieren. Dazu muss zuerst die Schlüssel-ID ausfindig gemacht werden und anschließend Git mitgeteilt werden.
 
-\begin{minted}[framesep=2mm, fontsize=\small]{bash}
+\begin{verbatim}
 $ gpg --list-secret-keys --keyid-format 0xSHORT
 /home/hugo/.config/gnupg/pubring.gpg
 --------------------------------------
@@ -80,8 +80,8 @@ ssb   rsa2048/4A1B6E12 2018-03-15 [E]
 
 $ git config --global user.signingkey "0x85ED78DE"
 $ git config --global commit.gpgSign true
-\end{minted}
+\end{verbatim}
 
-\begin{INFO}
+\begin{info-popup}
   Sollte das Betriebssystem gpg nicht finden, wird die Binary nicht durch die Umgebungsvariable \textit{PATH} aufgelöst. Entweder wird der Pfad zur gpg Binary der Umgebungsvariable \textit{PATH} hinzugefügt oder der absolute Pfad mit Angabe der gpg Binary Git durch folgenden Befehl mitgeteilt - \textit{git config --global gpg.program $ < $Pfad$ > $}
-\end{INFO}
+\end{info-popup}
